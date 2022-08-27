@@ -64,6 +64,7 @@ def range_link(start, end):
     if start >= end:
         return Link.empty
     else:
+        # recursive
         return Link(start, range_link(start + 1, end))
 
 
@@ -76,6 +77,7 @@ def map_link(f, s):
     if s is Link.empty:
         return s
     else:
+        # recursive
         return Link(f(s.first), map_link(f, s.rest))
 
 

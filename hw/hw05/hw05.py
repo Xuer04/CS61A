@@ -1,4 +1,6 @@
+# AC
 class VendingMachine:
+    # 自动售货机
     """A vending machine that vends some product for some price.
 
     >>> v = VendingMachine('candy', 10)
@@ -36,8 +38,38 @@ class VendingMachine:
     'Here is your soda.'
     """
     "*** YOUR CODE HERE ***"
+    def __init__(self, goods_name, goods_price):
+        self.goods_name= goods_name
+        self.goods_price = goods_price
+        self.sotck_num = 0
+        self.balance = 0
 
+    def vend(self):
+        if self.sotck_num == 0:
+            return 'Inventory empty. Restocking required.'
+        elif self.balance < self.goods_price:
+            return f'You must add ${self.goods_price - self.balance} more funds.'
+        else:
+            change = self.balance - self.goods_price
+            self.balance = 0
+            self.sotck_num -= 1
+            if change != 0:
+                return f'Here is your {self.goods_name} and ${change} change.'
+            else:
+                return f'Here is your {self.goods_name}.'
 
+    def add_funds(self, value):
+        if self.sotck_num == 0:
+            return f'Inventory empty. Restocking required. Here is your ${value}.'
+        else:
+            self.balance += value
+            return f'Current balance: ${self.balance}'
+
+    def restock(self, num):
+        self.sotck_num += num
+        return f'Current {self.goods_name} stock: {self.sotck_num}'
+
+# AC
 class Mint:
     """A mint creates coins by stamping on years.
 
@@ -74,9 +106,11 @@ class Mint:
 
     def create(self, kind):
         "*** YOUR CODE HERE ***"
+        return kind(self.year)
 
     def update(self):
         "*** YOUR CODE HERE ***"
+        self.year = Mint.current_year
 
 class Coin:
     def __init__(self, year):
@@ -84,6 +118,9 @@ class Coin:
 
     def worth(self):
         "*** YOUR CODE HERE ***"
+        year_gap = Mint.current_year - self.year
+        extra_cents = year_gap - 50 if year_gap >= 50 else 0
+        return self.cents + extra_cents
 
 class Nickel(Coin):
     cents = 5
@@ -91,7 +128,7 @@ class Nickel(Coin):
 class Dime(Coin):
     cents = 10
 
-
+# AC
 def store_digits(n):
     """Stores the digits of a positive number n in a linked list.
 
@@ -108,8 +145,16 @@ def store_digits(n):
     >>> print("Do not use str or reversed!") if any([r in cleaned for r in ["str", "reversed"]]) else None
     """
     "*** YOUR CODE HERE ***"
+    if n < 10:
+        return Link(n)
+    else:
+        rest = Link(n % 10)
+        while n >= 10:
+            rest = Link((n // 10) % 10, rest)
+            n //= 10
+        return rest
 
-
+# AC
 def is_bst(t):
     """Returns True if the Tree t has the structure of a valid BST.
 
@@ -136,8 +181,29 @@ def is_bst(t):
     False
     """
     "*** YOUR CODE HERE ***"
+    def bst_min(t):
+        """Return the min value of tree **t**"""
+        if t.is_leaf():
+            return t.label
+        else:
+            return min(t.label, min([bst_min(b) for b in t.branches]))
 
+    def bst_max(t):
+        """Return the max value of tree **t**"""
+        if t.is_leaf():
+            return t.label
+        else:
+            return max(t.label, max([bst_max(b) for b in t.branches]))
 
+    if t.is_leaf():  # the leaf is bst
+        return True
+    else:
+        if len(t.branches) == 1:  # considering the single child node
+            return (is_bst(t.branches[0]) and t.label >= bst_max(t.branches[0])) or (is_bst(t.branches[0]) and t.label < bst_min(t.branches[0]))
+        else:  # check whether both child node is valid
+            return all(map(is_bst, t.branches)) and t.label >= bst_max(t.branches[0]) and t.label < bst_min(t.branches[1])
+ 
+# AC
 def preorder(t):
     """Return a list of the entries in this tree in the order that they
     would be visited by a preorder traversal (see problem description).
@@ -149,8 +215,13 @@ def preorder(t):
     [2, 4, 6]
     """
     "*** YOUR CODE HERE ***"
+    if t.is_leaf():
+        return [t.label]
+    else:
+        branches = [preorder(b) for b in t.branches]
+        return sum(branches, [t.label])
 
-
+# AC
 def path_yielder(t, value):
     """Yields all possible paths from the root of t to a node with the label value
     as a list.
@@ -185,13 +256,13 @@ def path_yielder(t, value):
     >>> sorted(list(path_to_2))
     [[0, 2], [0, 2, 1, 2]]
     """
-
     "*** YOUR CODE HERE ***"
-
-    for _______________ in _________________:
-        for _______________ in _________________:
-
+    if t.label == value:
+        yield [t.label]
+    for b in t.branches:
+        for path in path_yielder(b, value):
             "*** YOUR CODE HERE ***"
+            yield [t.label] + path
 
 
 class Link:
