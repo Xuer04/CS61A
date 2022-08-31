@@ -1,18 +1,16 @@
 """CS 61A presents Ants Vs. SomeBees."""
 
-import random
 from ucb import main, interact, trace
 from collections import OrderedDict
 
-################
 # Core Classes #
 ################
 
 class Place:
     """A Place holds insects and has an exit to another Place."""
 
-    def __init__(self, name, exit=None):
-        """Create a Place with the given NAME and EXIT.
+    def __init__(self, name, exit=none):
+        """create a place with the given name and exit.
 
         name -- A string; the name of this Place.
         exit -- The Place reached by exiting this Place (may be None).
@@ -495,7 +493,6 @@ class Bee(Insect):
 # Optional #
 ############
 
-# AC
 class NinjaAnt(Ant):
     """NinjaAnt does not block the path and damages all bees in its place.
     This class is optional.
@@ -511,6 +508,7 @@ class NinjaAnt(Ant):
     # END Problem Optional 1
 
     def action(self, gamestate):
+        # AC
         # BEGIN Problem Optional 1
         "*** YOUR CODE HERE ***"
         bees_list = self.place.bees[:]
@@ -525,12 +523,14 @@ class ContainerAnt(Ant):
         self.contained_ant = None
 
     def can_contain(self, other):
+        # AC
         # BEGIN Problem Optional 2
         "*** YOUR CODE HERE ***"
         return not self.contained_ant and not isinstance(other, ContainerAnt)
         # END Problem Optional 2
 
     def contain_ant(self, ant):
+        # AC
         # BEGIN Problem Optional 2
         "*** YOUR CODE HERE ***"
         self.contained_ant = ant
@@ -552,6 +552,7 @@ class ContainerAnt(Ant):
             Ant.remove_from(self, place)
 
     def action(self, gamestate):
+        # AC
         # BEGIN Optional 2
         "*** YOUR CODE HERE ***"
         if self.contained_ant:
@@ -735,9 +736,6 @@ class LaserAnt(ThrowerAnt):
             insect.reduce_armor(damage)
             if damage:
                 self.insects_shot += 1
-
-
-
 
 
 ##################
